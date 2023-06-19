@@ -11,20 +11,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memo/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Add note test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const MemoApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that no notes are initially displayed.
+    expect(find.text('No notes'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Tap the add note button and trigger a frame.
+    await tester.tap(find.byKey(const Key('add_note_button')));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the note input dialog is displayed.
+    expect(find.byType(AlertDialog), findsOneWidget);
+
+    // Enter a note in the text field and tap the add button.
+    await tester.enterText(find.byType(TextField), 'Test note');
+    await tester.tap(find.text('추가'));
+    await tester.pump();
+
+    // Verify that the note is added and displayed.
+    expect(find.text('Test note'), findsOneWidget);
   });
 }
